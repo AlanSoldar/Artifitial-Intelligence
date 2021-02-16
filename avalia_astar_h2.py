@@ -23,7 +23,7 @@ class Node:
     def toString(self):
         return '(' + self.direction + ','+ self.newState+','+ str(self.cost) +',' + self.initialState + ')'
 
-def avaliaHamming():
+def avaliaManhattan():
     inPuzzle = str(sys.argv[1]).replace('_', '0')
     puzzle = Node(inPuzzle, None, 0, inPuzzle)
     totalCost = 0
@@ -41,7 +41,7 @@ def avaliaHamming():
         bestState = figureOutBestState(frontier)
         puzzle = bestState
         
-        print('current best state ', puzzle.newState, puzzle.cost, 'frontier len', len(frontier), 'expanded len', len(expandedList), 'current score', hammingScore(puzzle), 'best score so far', hammingScore(bestState))
+        print('current best state ', puzzle.newState, puzzle.cost, 'frontier len', len(frontier), 'expanded len', len(expandedList), 'current score', ManhattanScore(puzzle), 'best score so far', ManhattanScore(bestState))
         
         totalCost = puzzle.cost
     
@@ -49,12 +49,11 @@ def avaliaHamming():
 
 def figureOutBestState(frontier):
     bestScoredNode = list(frontier.values())[0]
-    test = {}
 
     for node in frontier.values():
-        if hammingScore(node) + node.cost < hammingScore(bestScoredNode) + bestScoredNode.cost:
-            #print(node.toString(), hammingScore(node))
-            bestScore = hammingScore(node)
+        if ManhattanScore(node) + node.cost < ManhattanScore(bestScoredNode) + bestScoredNode.cost:
+            #print(node.toString(), ManhattanScore(node))
+            bestScore = ManhattanScore(node)
             bestScoredNode = node
 
     return bestScoredNode
@@ -76,12 +75,8 @@ def expande(currentState, currentCost):
 
     return nodeList
 
-def hammingScore(node):
-    score = 0
-    for i in range(len(node.newState)):
-        if node.newState[i] != EMPTY_SPACE and int(node.newState[i])-1!=i:
-            score+=1
-    return score
+def ManhattanScore(node):
+    #todo
 
 def getNodeList(left, down, right, up):
     nodeList = []
@@ -131,4 +126,4 @@ def getDown(puzzle, emptyPos, cost):
         return None
 
 if __name__ == '__main__':
-    avaliaHamming()
+    avaliaManhattan()
