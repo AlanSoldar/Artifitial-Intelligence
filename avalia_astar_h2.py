@@ -46,6 +46,19 @@ def avaliaManhattan():
         totalCost = puzzle.cost
     
     print('success')
+    traceTree(expandedList, puzzle)
+
+def traceTree(expandedList, finalNode):
+    successPath = []
+    currentNode = finalNode
+    while currentNode.cost != 0:
+        successPath.append(currentNode)
+        currentNode=expandedList.get(int(currentNode.initialState))
+    
+    successPath.append(currentNode)
+    successPath.reverse()
+    for node in successPath:
+        print(node.toString())
 
 def figureOutBestState(frontier):
     bestScoredNode = list(frontier.values())[0]

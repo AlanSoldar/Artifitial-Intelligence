@@ -25,7 +25,7 @@ class Node:
 
 def avaliaHamming():
     inPuzzle = str(sys.argv[1]).replace('_', '0')
-    puzzle = Node(inPuzzle, None, 0, inPuzzle)
+    puzzle = Node(inPuzzle, 'start', 0, inPuzzle)
     totalCost = 0
     bestScore = 8
     frontier = {int(puzzle.newState):puzzle}
@@ -41,15 +41,30 @@ def avaliaHamming():
         bestState = figureOutBestState(frontier)
         puzzle = bestState
         
-        print('current best state ', puzzle.newState, puzzle.cost, 'frontier len', len(frontier), 'expanded len', len(expandedList), 'current score', hammingScore(puzzle), 'best score so far', hammingScore(bestState))
+        print('current best state:', puzzle.newState, puzzle.cost, ' frontier len:', len(frontier), ' expanded nodes:', len(expandedList), ' current score:', hammingScore(puzzle))
         
         totalCost = puzzle.cost
     
     print('success')
+    traceTree(expandedList, puzzle)
+
+def traceTree(expandedList, finalNode):
+    successPath = []
+    currentNode = finalNode
+    while currentNode.cost != 0:
+        successPath.append(currentNode)
+        currentNode=expandedList.get(int(currentNode.initialState))
+    
+    successPath.append(currentNode)
+    successPath.reverse()
+    for node in successPath:
+        print(node.toString())
+        
+
+
 
 def figureOutBestState(frontier):
     bestScoredNode = list(frontier.values())[0]
-    test = {}
 
     for node in frontier.values():
         if hammingScore(node) + node.cost < hammingScore(bestScoredNode) + bestScoredNode.cost:
