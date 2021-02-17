@@ -22,7 +22,7 @@ def getLeft(puzzle, emptyPos, cost):
     else:
         return ''
 
-def geUp(puzzle, emptyPos, cost):
+def getUp(puzzle, emptyPos, cost):
     if(emptyPos-3 >= 0):
         newState = puzzle[:emptyPos-3] + '_' + puzzle[emptyPos-2:emptyPos] + puzzle[emptyPos-3] + puzzle[emptyPos+1:]
         return '(acima,'+ newState+','+ str(cost+1)+','+ puzzle + ')'
