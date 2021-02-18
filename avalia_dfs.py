@@ -26,7 +26,18 @@ class Node:
 
 
 def dfs():
-    print('hello world')
+    inPuzzle = str(sys.argv[1]).replace('_', '0')
+    puzzle = Node(inPuzzle, 'start', 0, inPuzzle)
+    frontier = []
+    expandedList = {}
+    
+    while(puzzle.current != FINAL_STATE):
+        expandedList[int(puzzle.current)] = puzzle
+        frontier = addOnFrontier(frontier, expandedList, expande(puzzle.current, puzzle.cost))
+        puzzle = frontier.pop() 
+  
+    traceTree(expandedList, puzzle)
+
 
 def addOnFrontier(frontier, expandedList, nodeList):
     for node in nodeList:
@@ -40,9 +51,23 @@ def expande(currentState, currentCost):
 
     nodeList = getNodeList(getLeft(currentState, emptyPos, currentCost), getDown(currentState, emptyPos, currentCost), getRight(
         currentState, emptyPos, currentCost), getUp(currentState, emptyPos, currentCost))
-    # printFrontier(nodeList)
 
     return nodeList
+
+
+def traceTree(expandedList, finalNode):
+    successPath = []
+    currentNode = finalNode
+    while currentNode.cost != 0:
+        successPath.append(currentNode)
+        currentNode = expandedList.get(int(currentNode.previous))
+
+    successPath.append(currentNode)
+    successPath.reverse()
+    successPath.pop(0)
+    for node in successPath:
+        print(node.direction, end=' ')
+
 
 def getNodeList(left, down, right, up):
     nodeList = []
