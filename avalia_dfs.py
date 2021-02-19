@@ -34,8 +34,9 @@ def dfs():
     while(puzzle.current != FINAL_STATE):
         expandedList[int(puzzle.current)] = puzzle
         frontier = addOnFrontier(frontier, expandedList, expande(puzzle.current, puzzle.cost))
+        # print(puzzle.current)
         puzzle = frontier.pop() 
-  
+
     traceTree(expandedList, puzzle)
 
 
@@ -49,8 +50,10 @@ def addOnFrontier(frontier, expandedList, nodeList):
 def expande(currentState, currentCost):
     emptyPos = currentState.find(EMPTY_SPACE)
 
-    nodeList = getNodeList(getLeft(currentState, emptyPos, currentCost), getDown(currentState, emptyPos, currentCost), getRight(
-        currentState, emptyPos, currentCost), getUp(currentState, emptyPos, currentCost))
+    nodeList = getNodeList(getLeft(currentState, emptyPos, currentCost), 
+                             getDown(currentState, emptyPos, currentCost), 
+                             getUp(currentState, emptyPos, currentCost),
+                             getRight(currentState, emptyPos, currentCost))
 
     return nodeList
 
@@ -62,6 +65,7 @@ def traceTree(expandedList, finalNode):
         successPath.append(currentNode)
         currentNode = expandedList.get(int(currentNode.previous))
 
+    # print('currentNode: ', currentNode.current)
     successPath.append(currentNode)
     successPath.reverse()
     successPath.pop(0)
