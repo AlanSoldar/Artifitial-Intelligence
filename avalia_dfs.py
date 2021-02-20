@@ -52,8 +52,8 @@ def expande(currentState, currentCost):
 
     nodeList = getNodeList(getLeft(currentState, emptyPos, currentCost), 
                              getDown(currentState, emptyPos, currentCost), 
-                             getUp(currentState, emptyPos, currentCost),
-                             getRight(currentState, emptyPos, currentCost))
+                             getRight(currentState, emptyPos, currentCost),
+                             getUp(currentState, emptyPos, currentCost))
 
     return nodeList
 
