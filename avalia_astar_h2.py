@@ -25,7 +25,7 @@ class Node:
 
 def avaliaManhattan():
     inPuzzle = str(sys.argv[1]).replace('_', '0')
-    puzzle = Node(inPuzzle, None, 0, inPuzzle)
+    puzzle = Node(inPuzzle, 'start', 0, inPuzzle)
     totalCost = 0
     bestScore = 8
     frontier = {int(puzzle.newState):puzzle}
@@ -41,11 +41,11 @@ def avaliaManhattan():
         bestState = figureOutBestState(frontier)
         puzzle = bestState
         
-        print('current best state ', puzzle.newState, puzzle.cost, 'frontier len', len(frontier), 'expanded len', len(expandedList), 'current score', ManhattanScore(puzzle), 'best score so far', ManhattanScore(bestState))
+        #print('current best state:', puzzle.newState, puzzle.cost, ' frontier len:', len(frontier), ' expanded nodes:', len(expandedList), ' current score:', manhattanScore(puzzle))
         
         totalCost = puzzle.cost
     
-    print('success')
+    #print('success')
     traceTree(expandedList, puzzle)
 
 def traceTree(expandedList, finalNode):
@@ -59,14 +59,15 @@ def traceTree(expandedList, finalNode):
     successPath.reverse()
     for node in successPath:
         print(node.toString())
+        
 
 def figureOutBestState(frontier):
     bestScoredNode = list(frontier.values())[0]
 
     for node in frontier.values():
-        if ManhattanScore(node) + node.cost < ManhattanScore(bestScoredNode) + bestScoredNode.cost:
-            #print(node.toString(), ManhattanScore(node))
-            bestScore = ManhattanScore(node)
+        if manhattanScore(node) + node.cost < manhattanScore(bestScoredNode) + bestScoredNode.cost:
+            #print(node.toString(), manhattanScore(node))
+            bestScore = manhattanScore(node)
             bestScoredNode = node
 
     return bestScoredNode
@@ -88,8 +89,42 @@ def expande(currentState, currentCost):
 
     return nodeList
 
-def ManhattanScore(node):
-    #todo
+def manhattanScore(node):
+    score = 0
+    for i in range(len(node.newState)):
+        pos = i
+        num = int(node.newState[i])
+        while(num!=0 and num-1 != pos):
+            #move vertical
+            if num <= 3 and pos > 2:
+                pos-=3
+                score+=1
+            elif num >= 7 and pos < 6:
+                pos+=3
+                score+=1
+            elif num > 3 and num < 7 and pos < 3:
+                pos+=3
+                score+=1
+            elif num > 3 and num < 7 and pos > 5:
+                pos-=3
+                score+=1
+            #move horizontal
+            if num == 1 or num == 4 or num == 7:
+                if pos%3 > 0:
+                    pos-=1
+                    score+=1
+            elif num == 2 or num == 5 or num == 8:
+                if pos%3 > 1:
+                    pos-=1
+                    score+=1
+                elif pos%3 < 1:
+                    pos+=1
+                    score+=1
+            elif num == 3 or num == 6:
+                if pos%3 < 2:
+                    pos+=1
+                    score+=1
+    return score
 
 def getNodeList(left, down, right, up):
     nodeList = []

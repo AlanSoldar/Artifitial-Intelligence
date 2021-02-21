@@ -41,11 +41,11 @@ def avaliaHamming():
         bestState = figureOutBestState(frontier)
         puzzle = bestState
         
-        print('current best state:', puzzle.newState, puzzle.cost, ' frontier len:', len(frontier), ' expanded nodes:', len(expandedList), ' current score:', hammingScore(puzzle))
+        #print('current best state:', puzzle.newState, puzzle.cost, ' frontier len:', len(frontier), ' expanded nodes:', len(expandedList), ' current score:', hammingScore(puzzle))
         
         totalCost = puzzle.cost
     
-    print('success')
+    #print('success')
     traceTree(expandedList, puzzle)
 
 def traceTree(expandedList, finalNode):
@@ -60,8 +60,6 @@ def traceTree(expandedList, finalNode):
     for node in successPath:
         print(node.toString())
         
-
-
 
 def figureOutBestState(frontier):
     bestScoredNode = list(frontier.values())[0]
