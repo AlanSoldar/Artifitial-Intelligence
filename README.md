@@ -14,7 +14,7 @@ Quantos nós são expandidos e qual o custo da solução encontrada para o estad
 
 BFS: 106821 estados foram expandidos, o caminho encontrado possui custo 23.
 
-DFS: 121238 estadps foram expandidos, o caminho encontrado possui custo 102043.
+DFS: 121238 estados foram expandidos, o caminho encontrado possui custo 102043.
 
 A* h1: 13411 estados expandidos, o caminho encontrado possui custo 23.
 
