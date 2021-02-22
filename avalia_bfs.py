@@ -7,7 +7,6 @@ ABAIXO = 'abaixo'
 EMPTY_SPACE = '0'
 FINAL_STATE = '123456780'
 
-
 class Node:
     def __init__(self, previous, direction, cost, current):
         self.previous = previous
@@ -34,8 +33,7 @@ def bfs():
         expandedList[int(puzzle.current)] = puzzle
         frontier = addOnFrontier(frontier, expandedList, expande(puzzle.current, puzzle.cost))
         puzzle = frontier.pop(0)
-
-    #print('success')
+    #print('success',expandedList.__len__())
     traceTree(expandedList, puzzle)
 
 

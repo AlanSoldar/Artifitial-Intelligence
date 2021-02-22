@@ -45,7 +45,7 @@ def avaliaHamming():
         
         totalCost = puzzle.cost
     
-    #print('success')
+    #print('success',expandedList.__len__())
     traceTree(expandedList, puzzle)
 
 def traceTree(expandedList, finalNode):
@@ -57,8 +57,9 @@ def traceTree(expandedList, finalNode):
     
     successPath.append(currentNode)
     successPath.reverse()
+    successPath.pop(0)
     for node in successPath:
-        print(node.toString())
+        print(node.direction, end=' ')
         
 
 def figureOutBestState(frontier):
