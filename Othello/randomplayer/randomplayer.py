@@ -11,8 +11,11 @@ def make_move(the_board, color):
     """
     color = board.Board.WHITE if color == 'white' else board.Board.BLACK
     legal_moves = the_board.legal_moves(color)
+    print(legal_moves)
 
-    return random.choice(legal_moves) if len(legal_moves) > 0 else (-1, -1)
+    newMove = random.choice(legal_moves) if len(legal_moves) > 0 else (-1, -1)
+    print(newMove[:2])
+    return newMove[:2]
 
 
 if __name__ == '__main__':
