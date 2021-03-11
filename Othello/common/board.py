@@ -37,6 +37,8 @@ class Board(object):
     BLACK = 'B'
     WHITE = 'W'
     EMPTY = '.'
+    TABLE_MAX = 7
+    TABLE_MIN = 0
 
     # direction of neighbor tiles (add to current tile coordinates to obtain neighbor)
     UP = (0, -1)
@@ -73,7 +75,7 @@ class Board(object):
         :param move: (int, int)
         :return: bool
         """
-        return 0 <= move[0] < 8 and 0 <= move[1] < 8
+        return self.TABLE_MIN <= move[0] < self.TABLE_MAX+1 and self.TABLE_MIN <= move[1] < self.TABLE_MAX+1
 
     def is_legal(self, move, color):
         """
@@ -83,7 +85,7 @@ class Board(object):
         :return: bool
         """
         # move is queried row,col but stored col,row in legal_moves
-        return (move[1], move[0]) in self.legal_moves(color)
+        return (move[1], move[0], move[2]) in self.legal_moves(color)
 
     def find_bracket(self, move, color, direction):
         """
@@ -100,21 +102,23 @@ class Board(object):
         tx, ty = move
         tx += dx
         ty += dy
+        score = 0
 
         opp = self.BLACK if color == self.WHITE else self.WHITE  # inline opponent calc.
 
-        if not (0 <= tx <= 7 and 0 <= ty <= 7) or self.tiles[tx][ty] != opp:
+        if not (self.TABLE_MIN <= tx <= self.TABLE_MAX and self.TABLE_MIN <= ty <= self.TABLE_MAX) or self.tiles[tx][ty] != opp:
             return False
 
         while self.tiles[tx][ty] == opp:  # putting is_within_bounds here yields more calls
             tx += dx
             ty += dy
-            if not (0 <= tx <= 7 and 0 <= ty <= 7):  # self.is_within_bounds((tx, ty)):
+            score += 1
+            if not (self.TABLE_MIN <= tx <= self.TABLE_MAX and self.TABLE_MIN <= ty <= self.TABLE_MAX):  # self.is_within_bounds((tx, ty)):
                 return False
 
         if self.tiles[tx][ty] == self.EMPTY:
             return False
-        return tx, ty
+        return tx, ty, score
 
     def find_where_to_play_from_owned(self, owned, color, direction):
         """
@@ -133,20 +137,22 @@ class Board(object):
         tx, ty = owned
         tx += dx
         ty += dy
+        score = 0
         opp = self.BLACK if color == self.WHITE else self.WHITE  # inline opponent calc.
 
-        if not (0 <= tx <= 7 and 0 <= ty <= 7) or self.tiles[tx][ty] != opp:  # color:
+        if not (self.TABLE_MIN <= tx <= self.TABLE_MAX and self.TABLE_MIN <= ty <= self.TABLE_MAX) or self.tiles[tx][ty] != opp:  # color:
             return False
 
         while self.tiles[tx][ty] == opp:
             tx += dx
             ty += dy
-            if not (0 <= tx <= 7 and 0 <= ty <= 7):
+            score += 1
+            if not (self.TABLE_MIN <= tx <= self.TABLE_MAX and self.TABLE_MIN <= ty <= self.TABLE_MAX):
                 return False
 
         if self.tiles[tx][ty] != self.EMPTY:
             return False
-        return tx, ty
+        return tx, ty, score
 
     def process_move(self, position, color):
         """
@@ -158,26 +164,26 @@ class Board(object):
         """
 
         # as the board is represented row-column, swaps coords to col-row
-        position = position[1], position[0]
+        position = position[1], position[0], position[2]
 
         if color not in [self.WHITE, self.BLACK]:
             raise ValueError("Move must be made by BLACK or WHITE player")
 
         if self.is_legal(position, color):
             # places the piece and update piece counts
-            px, py = position
+            px, py, score = position
             self.tiles[px][py] = color
             self.piece_count[color] += 1
             self.piece_count[self.EMPTY] -= 1
 
             for direc in self.DIRECTIONS:
-                self.flip_tiles(position, color, direc)
+                self.flip_tiles(position[:2], color, direc)
 
             # resets legal moves
             self._legal_moves[self.BLACK], self._legal_moves[self.WHITE] = None, None
-            return True
+            return self
 
-        return False  # guards against illegal moves
+        return "(-1,-1)"
 
     def flip_tiles(self, origin, color, direction):
         """
@@ -199,8 +205,9 @@ class Board(object):
 
         opp = self.opponent(color)
 
-        while (nx, ny) != destination:
+        while (nx, ny) != destination[:2]:
             # flips the tile and updates piece counts
+            print(color, nx, ny)
             self.tiles[nx][ny] = color
             self.piece_count[color] += 1
             self.piece_count[opp] -= 1
@@ -236,9 +243,10 @@ class Board(object):
             if self.tiles[x][y] == self.EMPTY:  # and any(map(hasbracket, self.DIRECTIONS)):
                 # performs the 'inline' any:
                 for direc in self.DIRECTIONS:
-                    if self.find_bracket((x, y), color, direc):
+                    move = self.find_bracket((x, y), color, direc)
+                    if move:
                         # flips x,y because of the way tiles are stored and the x,y coords in real world
-                        self._legal_moves[color].append((y, x))
+                        self._legal_moves[color].append((move[1], move[0], move[2]))
                         break
 
     def find_legal_moves_sparse(self, color):
@@ -257,7 +265,7 @@ class Board(object):
                     move = self.find_where_to_play_from_owned((x, y), color, direc)
                     if move:
                         # flips x,y because of the way tiles are stored and the x,y coords in real world
-                        self._legal_moves[color].append((move[1], move[0]))
+                        self._legal_moves[color].append((move[1], move[0], move[2]))
 
     def has_legal_move(self, color):
         """
