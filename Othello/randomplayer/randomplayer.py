@@ -2,6 +2,7 @@ import random
 import sys
 sys.path.append('..')
 from common import board
+from common import moveService
 
 
 def make_move(the_board, color):
@@ -13,8 +14,8 @@ def make_move(the_board, color):
     legal_moves = the_board.legal_moves(color)
     print(legal_moves)
 
-    newMove = random.choice(legal_moves) if len(legal_moves) > 0 else (-1, -1)
-    print(newMove[:2])
+    #newMove = random.choice(legal_moves) if len(legal_moves) > 0 else (-1, -1)
+    newMove = moveService.getNewMove(the_board, color)
     return newMove[:2]
 
 
