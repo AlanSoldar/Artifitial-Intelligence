@@ -172,6 +172,7 @@ class Board(object):
         if self.is_legal(position, color):
             # places the piece and update piece counts
             px, py, score = position
+            print("initial move", px, py, color)
             self.tiles[px][py] = color
             self.piece_count[color] += 1
             self.piece_count[self.EMPTY] -= 1
