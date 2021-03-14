@@ -1,7 +1,8 @@
 from common import board
 import copy
 
-MAX, MIN = 1000, -1000
+MAX, MIN = [(0,0,1000),1000], [(0,0,-1000), -1000]
+MAX_LEVEL = 3
 
 # Returns optimal value for current player 
 #(Initially called for root and maximizer) 
@@ -49,41 +50,74 @@ def minimax(depth, nodeIndex, maximizingPlayer,
         
         return best 
 
+def minScore(move, minMove):
+    if move[1] < minMove[1]:
+        return move
+    else:
+        return minMove
 
-def getNewMoveRecursive(the_board, color, level):
-    legal_moves = the_board.legal_moves(color)
-    finalList = []
-    opponentColor = "B" if color == "W" else "W"
-    if level > 1:
-        return legal_moves
-    for move in legal_moves:
-        print("move", move, color, level)
-        newBoard = the_board.process_move([move[0],move[1],move[2]], color)
-        finalList += getNewMoveRecursive(newBoard, opponentColor,  level+1)
-    return finalList
+def maxScore(move, maxMove):
+    if move[1] > maxMove[1]:
+        return move
+    else:
+        return maxMove  
 
-def getNewMoveRecursivePrint(the_board, color, level):
-    print("oldBoard:")
-    print(the_board)
-    finalList = []
-    print("valid moves:",the_board.legal_moves(color))
-    if level > 1:
-        return the_board.legal_moves(color)
-    for move in the_board.legal_moves(color):
-        newBoard = copy.deepcopy(the_board)
-        if(move[0] == 2 and move[1] == 0) or (move[0] == 5 and move[1] == 3):
-            return finalList
-        print("move", move, color, level)
-        newBoard.process_move([move[0],move[1],move[2]], color)
-        print("newBoard:")
-        print(newBoard)
-        finalList += getNewMoveRecursivePrint(newBoard, newBoard.opponent(color),  level+1)
-    return finalList
+def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, initialMove):
+    #print("player",actualColor,"alpha",alpha,"beta",beta,"deep", level)
+
+    if player == actualColor: 
+        best = MIN
+
+        # Recur for left and right children 
+        for move in the_board.legal_moves(actualColor): 
+            if level >= MAX_LEVEL:
+                return [initialMove, move[2]]
+            if level == 0:
+                initialMove = move
+
+            newBoard = copy.deepcopy(the_board)
+            newBoard.process_move([move[0],move[1],move[2]], actualColor)
+
+            val = getNewMoveRecursive(newBoard, player,  level+1, newBoard.opponent(actualColor), alpha, beta, initialMove)
+            best = maxScore(best, val) 
+            alpha = maxScore(alpha, best) 
+
+            # Alpha Beta Pruning 
+            if beta[1] <= alpha[1]: 
+                break
+        
+        #print(best)
+        return best 
+    
+    else: 
+        best = MAX
+
+        # Recur for left and 
+        # right children 
+        for move in the_board.legal_moves(actualColor): 
+            if level >= MAX_LEVEL:
+                return [initialMove, move[2]]
+            if level == 0:
+                initialMove = move
+
+            newBoard = copy.deepcopy(the_board)
+            newBoard.process_move([move[0],move[1],move[2]], actualColor)
+
+            val = getNewMoveRecursive(newBoard, player,  level+1, newBoard.opponent(actualColor), alpha, beta, initialMove)
+            best = minScore(best, val) 
+            beta = minScore(beta, best) 
+
+            # Alpha Beta Pruning 
+            if beta[1] <= alpha[1]: 
+                break
+        
+        #print(best)
+        return best 
 
 def getNewMove(the_board, color):
-    print(the_board)
-    listOfMoves = getNewMoveRecursivePrint(the_board, color, 0)
+    print(the_board.legal_moves(color))
+    bestMove = getNewMoveRecursive(the_board, color,  0, color, MIN, MAX, [(0,0,0), 0])
 
-    print("list of leafs:", listOfMoves) 
+    print("best move:", bestMove) 
 
-    return (1,2)
+    return bestMove[0]

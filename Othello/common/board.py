@@ -75,7 +75,7 @@ class Board(object):
         :param move: (int, int)
         :return: bool
         """
-        return self.TABLE_MIN <= move[0] < self.TABLE_MAX+1 and self.TABLE_MIN <= move[1] < self.TABLE_MAX+1
+        return self.TABLE_MIN <= move[0] <= self.TABLE_MAX and self.TABLE_MIN <= move[1] <= self.TABLE_MAX
 
     def is_legal(self, move, color):
         """
@@ -172,7 +172,6 @@ class Board(object):
         if self.is_legal(position, color):
             # places the piece and update piece counts
             px, py, score = position
-            print("initial move", px, py, color)
             self.tiles[px][py] = color
             self.piece_count[color] += 1
             self.piece_count[self.EMPTY] -= 1
@@ -208,7 +207,6 @@ class Board(object):
 
         while (nx, ny) != destination[:2]:
             # flips the tile and updates piece counts
-            print(color, nx, ny)
             self.tiles[nx][ny] = color
             self.piece_count[color] += 1
             self.piece_count[opp] -= 1
