@@ -62,55 +62,43 @@ def maxScore(move, maxMove):
     else:
         return maxMove  
 
-def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, initialMove):
-    #print("player",actualColor,"alpha",alpha,"beta",beta,"deep", level)
+def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, initialMove, lastScore):
+    legalMoves = the_board.legal_moves(actualColor)
+    #print("player",actualColor,"alpha",alpha,"beta",beta,"deep", level, "legalMoves:",legalMoves)
 
-    if player == actualColor: 
-        best = MIN
+    if level >= MAX_LEVEL or not legalMoves:        #se atingiu o limite de profundidade ou o jogo acabou
+        return [initialMove, lastScore]             #retorna a jogada inicial que levou a esse futuro e a pontuação atual
 
-        for move in the_board.legal_moves(actualColor): 
-            if level >= MAX_LEVEL:
-                return [initialMove, move[2]]
-            if level == 0:
-                initialMove = move
+    best = MIN if player == actualColor else MAX    #inicializa o score com minimo ou max dependendo se o jogador atual é o que iniciou a predição
 
-            newBoard = copy.deepcopy(the_board)
-            newBoard.process_move([move[0],move[1],move[2]], actualColor)
+    for move in legalMoves: 
+        if level == 0:                              #se profundidade for 0 inicializa a jogada inicial deste stack para cada jogada na profundidade 0
+            initialMove = move
 
-            val = getNewMoveRecursive(newBoard, player,  level+1, newBoard.opponent(actualColor), alpha, beta, initialMove)
-            best = maxScore(best, val) 
+        newBoard = copy.deepcopy(the_board)         #cria um novo board
+        newBoard.process_move(move, actualColor)    #altera o board com a jogada atual
+
+        val = getNewMoveRecursive(newBoard, player,  level+1, newBoard.opponent(actualColor), alpha, beta, initialMove, move[2])    #recursão
+
+        if player == actualColor:                   #decide se o jogador atual é min ou max
+            best = maxScore(best, val)              
             alpha = maxScore(alpha, best) 
 
-            if beta[1] <= alpha[1]: 
+            if beta[1] <= alpha[1]:                 #poda alpha beta
                 break
         
-        #print(best)
-        return best 
-    
-    else: 
-        best = MAX
-
-        for move in the_board.legal_moves(actualColor): 
-            if level >= MAX_LEVEL:
-                return [initialMove, move[2]]
-            if level == 0:
-                initialMove = move
-
-            newBoard = copy.deepcopy(the_board)
-            newBoard.process_move([move[0],move[1],move[2]], actualColor)
-
-            val = getNewMoveRecursive(newBoard, player,  level+1, newBoard.opponent(actualColor), alpha, beta, initialMove)
+        else:
             best = minScore(best, val) 
             beta = minScore(beta, best) 
 
-            if beta[1] <= alpha[1]: 
+            if beta[1] <= alpha[1]:                 #poda alpha beta
                 break
         
         #print(best)
-        return best 
-
+    return best 
+    
 def getNewMove(the_board, color):
-    bestMove = getNewMoveRecursive(the_board, color,  0, color, MIN, MAX, [(0,0,0), 0])
+    bestMove = getNewMoveRecursive(the_board, color,  0, color, MIN, MAX, [(0,0,0), 0], (0,0,0))
 
     print("best move:", bestMove) 
 
