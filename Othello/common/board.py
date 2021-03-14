@@ -222,10 +222,7 @@ class Board(object):
             # construct the list of legal moves only once
             self._legal_moves[color] = []
 
-            if self.piece_count[color] > self.piece_count[self.EMPTY]:
-                self.find_legal_moves_dense(color)
-            else:
-                self.find_legal_moves_sparse(color)
+            self.find_legal_moves_sparse(color)
 
         return self._legal_moves[color]
 
@@ -243,10 +240,9 @@ class Board(object):
                 # performs the 'inline' any:
                 for direc in self.DIRECTIONS:
                     move = self.find_bracket((x, y), color, direc)
-                    if move:
-                        # flips x,y because of the way tiles are stored and the x,y coords in real world
-                        self._legal_moves[color].append((move[1], move[0], move[2]))
-                        break
+                    # flips x,y because of the way tiles are stored and the x,y coords in real world
+                    self._legal_moves[color].append((move[1], move[0], move[2]))
+                    break
 
     def find_legal_moves_sparse(self, color):
         """

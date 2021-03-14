@@ -12,9 +12,7 @@ def make_move(the_board, color):
     """
     color = board.Board.WHITE if color == 'white' else board.Board.BLACK
     legal_moves = the_board.legal_moves(color)
-    print(legal_moves)
 
-    #newMove = random.choice(legal_moves) if len(legal_moves) > 0 else (-1, -1)
     newMove = moveService.getNewMove(the_board, color)
     return newMove[:2]
 

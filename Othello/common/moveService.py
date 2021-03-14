@@ -2,7 +2,7 @@ from common import board
 import copy
 
 MAX, MIN = [(0,0,1000),1000], [(0,0,-1000), -1000]
-MAX_LEVEL = 3
+MAX_LEVEL = 5
 
 # Returns optimal value for current player 
 #(Initially called for root and maximizer) 
@@ -68,7 +68,6 @@ def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, init
     if player == actualColor: 
         best = MIN
 
-        # Recur for left and right children 
         for move in the_board.legal_moves(actualColor): 
             if level >= MAX_LEVEL:
                 return [initialMove, move[2]]
@@ -82,7 +81,6 @@ def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, init
             best = maxScore(best, val) 
             alpha = maxScore(alpha, best) 
 
-            # Alpha Beta Pruning 
             if beta[1] <= alpha[1]: 
                 break
         
@@ -92,8 +90,6 @@ def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, init
     else: 
         best = MAX
 
-        # Recur for left and 
-        # right children 
         for move in the_board.legal_moves(actualColor): 
             if level >= MAX_LEVEL:
                 return [initialMove, move[2]]
@@ -107,7 +103,6 @@ def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, init
             best = minScore(best, val) 
             beta = minScore(beta, best) 
 
-            # Alpha Beta Pruning 
             if beta[1] <= alpha[1]: 
                 break
         
@@ -115,7 +110,6 @@ def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, init
         return best 
 
 def getNewMove(the_board, color):
-    print(the_board.legal_moves(color))
     bestMove = getNewMoveRecursive(the_board, color,  0, color, MIN, MAX, [(0,0,0), 0])
 
     print("best move:", bestMove) 
