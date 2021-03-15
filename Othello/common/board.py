@@ -183,7 +183,7 @@ class Board(object):
             self._legal_moves[self.BLACK], self._legal_moves[self.WHITE] = None, None
             return self
 
-        return "(-1,-1)"
+        return False
 
     def flip_tiles(self, origin, color, direction):
         """
@@ -223,6 +223,7 @@ class Board(object):
             self._legal_moves[color] = []
 
             self.find_legal_moves_sparse(color)
+            
 
         return self._legal_moves[color]
 

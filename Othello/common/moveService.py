@@ -4,51 +4,6 @@ import copy
 MAX, MIN = [(0,0,1000),1000], [(0,0,-1000), -1000]
 MAX_LEVEL = 5
 
-# Returns optimal value for current player 
-#(Initially called for root and maximizer) 
-def minimax(depth, nodeIndex, maximizingPlayer, 
-            values, alpha, beta): 
-
-    # Terminating condition. i.e 
-    # leaf node is reached 
-    if depth == 3: 
-        return values[nodeIndex] 
-
-    if maximizingPlayer: 
-    
-        best = MIN
-
-        # Recur for left and right children 
-        for i in range(0, 2): 
-            
-            val = minimax(depth + 1, nodeIndex * 2 + i, 
-                        False, values, alpha, beta) 
-            best = max(best, val) 
-            alpha = max(alpha, best) 
-
-            # Alpha Beta Pruning 
-            if beta <= alpha: 
-                break
-        
-        return best 
-    
-    else: 
-        best = MAX
-
-        # Recur for left and 
-        # right children 
-        for i in range(0, 2): 
-        
-            val = minimax(depth + 1, nodeIndex * 2 + i, 
-                            True, values, alpha, beta) 
-            best = min(best, val) 
-            beta = min(beta, best) 
-
-            # Alpha Beta Pruning 
-            if beta <= alpha: 
-                break
-        
-        return best 
 
 def minScore(move, minMove):
     if move[1] < minMove[1]:
@@ -62,9 +17,24 @@ def maxScore(move, maxMove):
     else:
         return maxMove  
 
+def evaluateScore(actualMove):
+    finalScore = actualMove[2]
+    if actualMove[0] == 0 or actualMove[0] == 7:
+        finalScore += 1
+    if actualMove[1] == 0 or actualMove[1] == 7:
+        finalScore += 1
+    if (actualMove[0] == 1 and actualMove[1] != 7 and actualMove[1] != 0) or (actualMove[0] == 6 and actualMove[1] != 7 and actualMove[1] != 0):
+        finalScore -= 1
+    if (actualMove[1] == 1 and actualMove[0] != 7 and actualMove[0] != 0) or (actualMove[1] == 6 and actualMove[0] != 7 and actualMove[0] != 0):
+        finalScore -= 1
+
+    return (finalScore)
+
 def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, initialMove, lastScore):
     legalMoves = the_board.legal_moves(actualColor)
     #print("player",actualColor,"alpha",alpha,"beta",beta,"deep", level, "legalMoves:",legalMoves)
+    pieceCount10 = the_board.piece_count['.'] // 10
+    MAX_LEVEL =  pieceCount10 if pieceCount10 > 3 else 3
 
     if level >= MAX_LEVEL or not legalMoves:        #se atingiu o limite de profundidade ou o jogo acabou
         return [initialMove, lastScore]             #retorna a jogada inicial que levou a esse futuro e a pontuação atual
@@ -79,7 +49,7 @@ def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, init
         newBoard.process_move(move, actualColor)    #altera o board com a jogada atual
 
         val = getNewMoveRecursive(newBoard, player,  level+1, newBoard.opponent(actualColor), alpha, beta, initialMove, move[2])    #recursão
-
+        val = [val[0],evaluateScore(move)]
         if player == actualColor:                   #decide se o jogador atual é min ou max
             best = maxScore(best, val)              
             alpha = maxScore(alpha, best) 
@@ -100,6 +70,6 @@ def getNewMoveRecursive(the_board, player, level, actualColor, alpha, beta, init
 def getNewMove(the_board, color):
     bestMove = getNewMoveRecursive(the_board, color,  0, color, MIN, MAX, [(0,0,0), 0], (0,0,0))
 
-    print("best move:", bestMove) 
+    #print("best move:", bestMove) 
 
     return bestMove[0]
