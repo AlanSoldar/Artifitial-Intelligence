@@ -58,8 +58,6 @@ def step_gradient(theta_0_current, theta_1_current, data, alpha):
     theta_0_updated = theta_0_current - alpha*der0
     theta_1_updated = theta_1_current - alpha*der1
 
-    print(theta_0_updated, theta_1_updated)
-
     return theta_0_updated, theta_1_updated
 
 def gradient_descent(data, starting_theta_0, starting_theta_1, learning_rate, num_iterations):
@@ -92,7 +90,7 @@ def gradient_descent(data, starting_theta_0, starting_theta_1, learning_rate, nu
     num_iterations = 10
     for i in range(num_iterations):
         cost_graph.append(compute_cost(theta_0, theta_1, data))
-        theta_0, theta_1 = step_gradient(theta_0, theta_1, data, alpha=0.0001)
+        theta_0, theta_1 = step_gradient(theta_0, theta_1, data, learning_rate)
         theta_0_progress.append(theta_0)
         theta_1_progress.append(theta_1)
         
