@@ -44,8 +44,13 @@ if __name__ == '__main__':
         condicao[i] = (condicao[i] - minCondicao) / (maxCondicao - minCondicao)
         areaGaragem[i] = (areaGaragem[i] - minGaragem) / (maxGaragem - minGaragem)
 
-
-    data = [[qualidadeList[i], anoList[i], areaList[i], areaGaragem[i], condicao[i], priceList[i]] for i in range(len(priceList))]
+    data = [[areaList[i], qualidadeList[i], condicao[i], areaGaragem[i], anoList[i], priceList[i]] for i in range(len(priceList))]
     theta_0, theta_1, theta_2, theta_3, theta_4, theta_5, cost_graph = gradiente5.gradient_descent(data, starting_theta_0=0, starting_theta_1=0, starting_theta_2=0, starting_theta_3=0, starting_theta_4=0, starting_theta_5=0, learning_rate=0.1, num_iterations=1000)
     
-    print("error = ", gradiente5.compute_cost(theta_0, theta_1, theta_2, theta_3, theta_4, theta_5, data), "theta 0: ", theta_0, "theta 1: ", theta_1, "theta 2: ", theta_2, "theta 3: ", theta_3, "theta 4 : ", theta_4, "theta 5: ", theta_5)
+    print("theta_0:", theta_0)
+    print("theta_1:", theta_1)
+    print("theta_2:", theta_2)
+    print("theta_3:", theta_3)
+    print("theta_4:", theta_4)
+    print("theta_5:", theta_5)
+    print("Erro quadratico medio:", gradiente5.compute_cost(theta_0, theta_1, theta_2, theta_3, theta_4, theta_5, data))

@@ -30,17 +30,7 @@ if __name__ == '__main__':
     data = [[areaList[i], qualidadeList[i], priceList[i]] for i in range(len(priceList))]
     theta_0, theta_1, theta_2, cost_graph, theta_0_progress, theta_1_progress, theta_2_progress = gradiente2.gradient_descent(data, starting_theta_0=0, starting_theta_1=0, starting_theta_2=0, learning_rate=0.1, num_iterations=1000)
     
-    print("error = ", gradiente2.compute_cost(theta_0, theta_1, theta_2, data), "theta 0: ", theta_0, "theta 1: ", theta_1, "theta 2: ", theta_2)
-
-    #plt.figure(figsize=(10, 6))
-    #plt.scatter(areaList+qualidadeList, priceList)
-
-    #pred0 = [458.35999 * item + 0.001 for item in areaList]
-    #pred1 = [theta_1 * item + theta_0 for item in areaList]
-    #plt.plot(areaList, pred0, c='r')
-    #plt.plot(areaList, pred1, c='r')
-
-    #plt.xlabel('Area (normalized)')
-    #plt.ylabel('Preço')
-    #plt.title('Custo beneficio')
-    #plt.show()
+    print("theta_0:", theta_0)
+    print("theta_1:", theta_1)
+    print("theta_2:", theta_2)
+    print("Erro quadratico medio:", gradiente2.compute_cost(theta_0, theta_1, theta_2, data))
