@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-s
 import gradiente5
 import csv
 

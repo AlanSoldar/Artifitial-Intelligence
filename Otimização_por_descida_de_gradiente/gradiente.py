@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 import numpy as np
+
 
 def compute_cost(theta_0, theta_1, data):
     """
