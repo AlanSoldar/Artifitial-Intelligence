@@ -33,10 +33,10 @@ def avaliaHamming():
     while(puzzle.newState != FINAL_STATE):
     #for i in range(3):
         frontier = addOnFrontier(frontier, expandedList ,expande(puzzle.newState, totalCost))
+        if not frontier:
+            return
         del frontier[int(puzzle.newState)]
         expandedList[int(puzzle.newState)] = puzzle
-        if not frontier:
-            print('error')
 
         bestState = figureOutBestState(frontier)
         puzzle = bestState
