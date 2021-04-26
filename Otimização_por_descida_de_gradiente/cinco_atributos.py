@@ -45,7 +45,7 @@ if __name__ == '__main__':
         areaGaragem[i] = (areaGaragem[i] - minGaragem) / (maxGaragem - minGaragem)
 
     data = [[areaList[i], qualidadeList[i], condicao[i], areaGaragem[i], anoList[i], priceList[i]] for i in range(len(priceList))]
-    theta_0, theta_1, theta_2, theta_3, theta_4, theta_5, cost_graph = gradiente5.gradient_descent(data, starting_theta_0=0, starting_theta_1=0, starting_theta_2=0, starting_theta_3=0, starting_theta_4=0, starting_theta_5=0, learning_rate=0.1, num_iterations=1000)
+    theta_0, theta_1, theta_2, theta_3, theta_4, theta_5, cost_graph = gradiente5.gradient_descent(data, starting_theta_0=0, starting_theta_1=0, starting_theta_2=0, starting_theta_3=0, starting_theta_4=0, starting_theta_5=0, learning_rate=0.1, num_iterations=20000)
     
     print("theta_0:", theta_0)
     print("theta_1:", theta_1)

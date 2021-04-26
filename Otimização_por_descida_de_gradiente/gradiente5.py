@@ -27,12 +27,12 @@ def compute_cost(theta_0, theta_1, theta_2, theta_3, theta_4, theta_5, data):
 
     for row in data:
         preco = row[5]
-        condicao = row[4]
+        ano = row[4]
         garagem = row[3]
-        sala = row[2]
-        ano = row[1]
-        qualidade = row[0]
-        sum0 += (preco-(a+(b*condicao)+(c*garagem)+(d*sala)+(e*ano)+(f*qualidade)))**2
+        condicao = row[2]
+        qualidade = row[1]
+        sala = row[0]
+        sum0 += (preco-(a+(b*sala)+(c*qualidade)+(d*condicao)+(e*garagem)+(f*ano)))**2
 
     error_theta_0 = (sum0/len(data))
 

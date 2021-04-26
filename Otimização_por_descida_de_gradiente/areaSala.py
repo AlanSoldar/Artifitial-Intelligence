@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
 
     data = [[areaList[i], priceList[i]] for i in range(len(priceList))]
-    theta_0, theta_1, cost_graph, theta_0_progress, theta_1_progress = gradiente.gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0.1, num_iterations=1000)
+    theta_0, theta_1, cost_graph, theta_0_progress, theta_1_progress = gradiente.gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0.1, num_iterations=15100)
     
     print("theta_0:", theta_0)
     print("theta_1:", theta_1)
