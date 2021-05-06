@@ -32,6 +32,8 @@ def bfs():
     while(puzzle.current != FINAL_STATE):
         expandedList[int(puzzle.current)] = puzzle
         frontier = addOnFrontier(frontier, expandedList, expande(puzzle.current, puzzle.cost))
+        if not frontier:
+            return
         puzzle = frontier.pop(0)
     #print('success',expandedList.__len__())
     traceTree(expandedList, puzzle)

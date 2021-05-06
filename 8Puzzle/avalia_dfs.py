@@ -34,7 +34,8 @@ def dfs():
     while(puzzle.current != FINAL_STATE):
         expandedList[int(puzzle.current)] = puzzle
         frontier = addOnFrontier(frontier, expandedList, expande(puzzle.current, puzzle.cost))
-        # print(puzzle.current)
+        if not frontier:
+            return
         puzzle = frontier.pop() 
 
     traceTree(expandedList, puzzle)
