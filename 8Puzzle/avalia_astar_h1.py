@@ -1,4 +1,5 @@
 import sys
+from time import time
 
 DIREITA = 'direita'
 ESQUERDA = 'esquerda'
@@ -6,6 +7,7 @@ ACIMA = 'acima'
 ABAIXO = 'abaixo'
 EMPTY_SPACE = '0'
 FINAL_STATE = '123456780'
+t = 0
 
 class Node:
     def __init__(self, initialState, direction, cost, newState):
@@ -24,6 +26,9 @@ class Node:
         return '(' + self.direction + ','+ self.newState+','+ str(self.cost) +',' + self.initialState + ')'
 
 def avaliaHamming():
+    t_start = time()
+    max_t_loop = 0
+    n_loop = 0
     inPuzzle = str(sys.argv[1]).replace('_', '0')
     puzzle = Node(inPuzzle, 'start', 0, inPuzzle)
     totalCost = 0
@@ -31,12 +36,13 @@ def avaliaHamming():
     frontier = {int(puzzle.newState):puzzle}
     expandedList = {}
     while(puzzle.newState != FINAL_STATE):
+        t_start_loop = time()
     #for i in range(3):
         frontier = addOnFrontier(frontier, expandedList ,expande(puzzle.newState, totalCost))
+        if not frontier:
+            return
         del frontier[int(puzzle.newState)]
         expandedList[int(puzzle.newState)] = puzzle
-        if not frontier:
-            print('error')
 
         bestState = figureOutBestState(frontier)
         puzzle = bestState
@@ -44,8 +50,16 @@ def avaliaHamming():
         #print('current best state:', puzzle.newState, puzzle.cost, ' frontier len:', len(frontier), ' expanded nodes:', len(expandedList), ' current score:', hammingScore(puzzle))
         
         totalCost = puzzle.cost
+        t_end_loop = time()
+        n_loop+=1
+        if (t_end_loop- t_start_loop > max_t_loop):
+            max_t_loop = t_end_loop- t_start_loop
     
     #print('success',expandedList.__len__())
+    t_end = time()
+    print("while time", max_t_loop)
+    print("n loop", n_loop)
+    print("avaliaH time", t_end-t_start)
     traceTree(expandedList, puzzle)
 
 def traceTree(expandedList, finalNode):
