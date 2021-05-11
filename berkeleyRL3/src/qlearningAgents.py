@@ -89,13 +89,13 @@ class QLearningAgent(ReinforcementAgent):
         """To break ties we are going to sort the list by the value and them
          randomly chose among those actions with max value"""
         maxVal = max(qValues, key=lambda x: x[0])
-        print("values: ", qValues)
-        print(maxVal)
+        #print("values: ", qValues)
+        #print(maxVal)
         maxValueActions = []
         for i in range(0, len(qValues)):
             if qValues[i][0] == maxVal[0]:
                 maxValueActions.append(qValues[i])
-        print("maxValueActions", maxValueActions)
+        #print("maxValueActions", maxValueActions)
         action = random.choice(maxValueActions)
         return action[1]
         
