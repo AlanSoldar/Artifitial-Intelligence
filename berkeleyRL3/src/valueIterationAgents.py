@@ -68,15 +68,16 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        print(self.mdp.getTransitionStatesAndProbs(state, action))
+        #print(self.mdp.getTransitionStatesAndProbs(state, action))
         sum = 0
-        print("trans:", self.mdp.getTransitionStatesAndProbs(state,action))
-        print(self.values)
+        #print("trans:", self.mdp.getTransitionStatesAndProbs(state,action))
+        #print(self.values)
+        
         for futureState, prob in self.mdp.getTransitionStatesAndProbs(state,action):
             sum += prob * (self.mdp.getReward(state, action, futureState) + self.discount * self.values[futureState])
         return sum
 
-    def computeActionFromValues(self, state):
+    def computeActionFromValuesInt(self, state):
         """
           The policy is the best action in the given state
           according to the values currently stored in self.values.
@@ -95,20 +96,24 @@ class ValueIterationAgent(ValueEstimationAgent):
         futureStates = []
         for action in self.mdp.getPossibleActions(state):
             futureStates.append((self.computeQValueFromValues(state,action), action))
-        
+        if(not futureStates):
+            return None
         bestAction = max(futureStates)
-
+        print("best action: ", str(bestAction))
         return bestAction
 
     def getPolicyInit(self, state):
         if(self.mdp.isTerminal(state)):
             return None
-        return self.computeActionFromValues(state)[0]
+        return self.computeActionFromValuesInt(state)[0]
 
     def getPolicy(self, state):
         if(self.mdp.isTerminal(state)):
             return None
-        return self.computeActionFromValues(state)[1]
+        return self.computeActionFromValuesInt(state)[1]
+    
+    def computeActionFromValues(self, state):
+      return self.getPolicy(state)
 
     def getAction(self, state):
         "Returns the policy at the state (no exploration)."

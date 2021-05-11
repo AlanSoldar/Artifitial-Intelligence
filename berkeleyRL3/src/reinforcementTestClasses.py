@@ -157,6 +157,7 @@ class ValueIterationTest(testClasses.TestCase):
                     if value is None:
                         row.append('   illegal')
                     else:
+                        print(formatString)
                         row.append(formatString.format(elements[(x,y)]))
                 else:
                     row.append('_' * 10)
