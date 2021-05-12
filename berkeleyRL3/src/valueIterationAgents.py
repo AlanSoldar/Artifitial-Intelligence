@@ -99,7 +99,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         if(not futureStates):
             return None
         bestAction = max(futureStates)
-        print("best action: ", str(bestAction))
+        #print("best action: ", str(bestAction))
         return bestAction
 
     def getPolicyInit(self, state):
